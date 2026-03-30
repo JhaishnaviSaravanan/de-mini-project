@@ -1,0 +1,30 @@
+resources:
+  jobs:
+    ecommerce_data_pipeline:
+      name: ecommerce_data_pipeline
+      tasks:
+        - task_key: bronze_ingestion
+          notebook_task:
+            notebook_path: /Workspace/Users/jhaishnavi@gmail.com/DE_Repo/de-mini-project/01_bronze/notebooks/bronze_ingestion
+            source: WORKSPACE
+        - task_key: silver_transformation
+          depends_on:
+            - task_key: bronze_ingestion
+          notebook_task:
+            notebook_path: /Workspace/Users/jhaishnavi@gmail.com/DE_Repo/de-mini-project/02_silver/notebooks/silver_transformation
+            source: WORKSPACE
+        - task_key: gold_data_modelling
+          depends_on:
+            - task_key: silver_transformation
+          notebook_task:
+            notebook_path: /Workspace/Users/jhaishnavi@gmail.com/DE_Repo/de-mini-project/03_gold/notebooks/gold_layer
+            source: WORKSPACE
+        - task_key: gold_kpi_analysis
+          depends_on:
+            - task_key: gold_data_modelling
+          notebook_task:
+            notebook_path: /Workspace/Users/jhaishnavi@gmail.com/DE_Repo/de-mini-project/03_gold/notebooks/gold_kpi_analysis
+            source: WORKSPACE
+      queue:
+        enabled: true
+      performance_target: PERFORMANCE_OPTIMIZED
